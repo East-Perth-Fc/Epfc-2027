@@ -90,6 +90,16 @@
     details summary::after{content:'+';font-size:22px;line-height:1;color:#2d6b22}
     details[open] summary::after{content:'−'}
     .optional-body{padding:0 17px 17px}
+    /* Optional volunteer interest: content-only addition below the existing form fields. */
+    .volunteer-section{margin-top:22px;border:1.5px solid #a9ce9c;border-radius:13px;overflow:hidden;background:#f7fbf4}
+    .volunteer-head{background:#17301e;color:#fff;padding:16px 17px}
+    .volunteer-eyebrow{margin:0 0 6px;color:#b5ea9b;font-size:11px;font-weight:900;letter-spacing:.11em;text-transform:uppercase}
+    .volunteer-head h3{font-size:22px;line-height:1.12;letter-spacing:-.02em;margin:0 0 7px;font-weight:950}
+    .volunteer-head p:last-child{margin:0;color:#e0f0d8;font-size:13px;line-height:1.5}
+    .volunteer-body{padding:17px}
+    .volunteer-body>.field{margin:0}
+    .volunteer-extra{display:grid;gap:16px;margin-top:17px;padding-top:16px;border-top:1px solid #d0e0cc}
+    .volunteer-fineprint{margin:11px 0 0;color:#506a4b;font-size:12px}
     .consent{display:flex;gap:12px;align-items:flex-start;margin-top:19px;padding:14px;background:#f8fbf6;border:1px solid #d4e0d1;border-radius:10px;font-size:13px;line-height:1.5;color:#263a25;cursor:pointer}
     .consent input{accent-color:#367a2d;flex:none;margin:3px 0 0;width:21px;height:21px}
     .submission-note{color:#687669;font-size:12px;margin:12px 0 0}
@@ -144,6 +154,14 @@
             <fieldset class="field full"><legend>Player's preferred team <span class="optional">(optional)</span></legend><div class="choices"><label class="choice"><input type="radio" name="teamPreference" value="Boys"> Boys</label><label class="choice"><input type="radio" name="teamPreference" value="Girls"> Girls</label></div><p class="hint">Leave blank if unsure; the club can discuss team options with you.</p></fieldset>
             <fieldset class="field full"><legend>Has your child played for East Perth FC before? <span class="required" aria-hidden="true">*</span></legend><div class="choices"><label class="choice"><input type="radio" name="membership" value="Returning" required> Yes, returning</label><label class="choice"><input type="radio" name="membership" value="New" required> No, new player</label></div></fieldset>
           </div>
+          <details id="extras"><summary>Football experience or anything else we should know <span class="optional">Optional</span></summary>
+            <div class="optional-body form-grid">
+              <div class="field full"><label class="field-label" for="experience">Your child's football experience</label><select id="experience" name="experience"><option value="">Select if you wish</option><option>New to football</option><option>Less than 1 year</option><option>1–2 years</option><option>3+ years</option></select></div>
+              <div class="field full"><label class="field-label" for="previousClub">Child's current / previous club</label><input id="previousClub" name="previousClub" type="text" maxlength="120" placeholder="If applicable"></div>
+              <div class="field full"><label class="field-label" for="position">Child's preferred playing position</label><select id="position" name="position"><option value="">Not sure / no preference</option><option>Goalkeeper</option><option>Defender</option><option>Midfielder</option><option>Forward</option></select></div>
+              <div class="field full"><label class="field-label" for="notes">Anything else we should know about your child?</label><textarea id="notes" name="notes" maxlength="600" placeholder="Any questions or useful information (please don't include medical details)"></textarea></div>
+            </div>
+          </details>
           <div class="controls"><span class="trust">✓ Just the essentials</span><button id="nextButton" class="primary" type="button">Continue →</button></div>
         </section>
         <section id="step2" class="form-panel" aria-labelledby="parentHeading" hidden>
@@ -154,16 +172,60 @@
             <div class="field full"><label class="field-label" for="mobile">Mobile number <span class="required" aria-hidden="true">*</span></label><input id="mobile" name="mobile" type="tel" inputmode="tel" autocomplete="tel" maxlength="25" required placeholder="04XX XXX XXX"></div>
             <div class="field full"><label class="field-label" for="email">Email address <span class="required" aria-hidden="true">*</span></label><input id="email" name="email" type="email" autocomplete="email" maxlength="160" required placeholder="name@example.com"></div>
           </div>
-          <details id="extras"><summary>Football experience or anything else? <span class="optional">Optional</span></summary>
-            <div class="optional-body form-grid">
-              <div class="field full"><label class="field-label" for="experience">Playing experience</label><select id="experience" name="experience"><option value="">Select if you wish</option><option>New to football</option><option>Less than 1 year</option><option>1–2 years</option><option>3+ years</option></select></div>
-              <div class="field full"><label class="field-label" for="previousClub">Current / previous club</label><input id="previousClub" name="previousClub" type="text" maxlength="120" placeholder="If applicable"></div>
-              <div class="field full"><label class="field-label" for="position">Preferred playing position</label><select id="position" name="position"><option value="">Not sure / no preference</option><option>Goalkeeper</option><option>Defender</option><option>Midfielder</option><option>Forward</option></select></div>
-              <div class="field full"><label class="field-label" for="notes">Anything else we should know?</label><textarea id="notes" name="notes" maxlength="600" placeholder="Any questions or useful information (please don't include medical details)"></textarea></div>
+          <section class="volunteer-section" aria-labelledby="volunteerHeading">
+            <div class="volunteer-head">
+              <p class="volunteer-eyebrow">You don't have to play to belong</p>
+              <h3 id="volunteerHeading">Want to be part of the East Perth family?</h3>
+              <p>Every great club is built by the people around it. From coaching and team management to match days, canteen and club events — there is a place for everyone. Even an hour can make a difference.</p>
             </div>
-          </details>
+            <div class="volunteer-body">
+              <div class="field">
+                <label class="field-label" for="volunteerInterest">1. Would you like to get involved with the club? <span class="optional">(optional)</span></label>
+                <select id="volunteerInterest" name="volunteerInterest" aria-controls="volunteerExtra" aria-expanded="false">
+                  <option value="">Choose an option</option>
+                  <option value="Yes - please contact me">Yes, I'd love to help</option>
+                  <option value="Maybe - occasional help">Maybe, when I can</option>
+                  <option value="Not at the moment">Not at the moment</option>
+                </select>
+              </div>
+              <div id="volunteerExtra" class="volunteer-extra" hidden>
+                <div class="field">
+                  <label class="field-label" for="volunteerRole">2. How would you like to get involved? <span class="optional">(optional)</span></label>
+                  <select id="volunteerRole" name="volunteerRole">
+                    <option value="">Not sure yet / happy to discuss</option>
+                    <option>Team manager / team organiser</option>
+                    <option>Coach / assistant coach</option>
+                    <option>Helping at training sessions</option>
+                    <option>Match-day setup / pack away</option>
+                    <option>Canteen / food service</option>
+                    <option>Kit / jerseys / laundry</option>
+                    <option>Events / fundraising</option>
+                    <option>Administration / communications</option>
+                    <option>Ball kids / match-day support</option>
+                    <option>Anywhere the club needs help</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label class="field-label" for="volunteerAvailability">3. When might you be available? <span class="optional">(optional)</span></label>
+                  <select id="volunteerAvailability" name="volunteerAvailability">
+                    <option value="">Not sure yet / happy to discuss</option>
+                    <option>Occasionally, an hour here and there</option>
+                    <option>Match days / weekends</option>
+                    <option>Weekday training sessions</option>
+                    <option>Events / one-off occasions</option>
+                    <option>Flexible / whenever needed</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label class="field-label" for="volunteerNotes">4. Anything else you could help with? <span class="optional">(optional)</span></label>
+                  <textarea id="volunteerNotes" name="volunteerNotes" rows="2" maxlength="350" placeholder="Skills, other roles or questions (if you like)"></textarea>
+                </div>
+              </div>
+              <p class="volunteer-fineprint">No commitment — this only lets the club know you're open to a chat. Roles working with children require appropriate safeguarding checks.</p>
+            </div>
+          </section>
           <label class="consent"><input id="consent" name="consent" type="checkbox" required><span>I confirm I'm the player's parent or guardian and agree to East Perth FC contacting me about the 2027 juniors expression of interest. <span class="required" aria-hidden="true">*</span></span></label>
-          <p class="submission-note"><strong>Privacy:</strong> East Perth FC uses these details only to manage junior football expressions of interest and contact parents about the 2027 season. Submissions are received and stored using Formspree, not in this public GitHub website. Only authorised club account users should access the submissions. An expression of interest does not guarantee a team place.</p>
+          <p class="submission-note"><strong>Privacy:</strong> East Perth FC uses these details to manage junior football expressions of interest and contact parents about the 2027 season. If you express an interest in volunteering, the club may also contact you about suitable roles. Submissions are received and stored using Formspree, not in this public GitHub website. Only authorised club account users should access the submissions. An expression of interest does not guarantee a team place.</p>
           <p class="alert" id="submissionError" role="alert" hidden>We could not send your details. Please check your connection and try again.</p>
           <div class="controls"><button class="secondary" id="backButton" type="button">← Back</button><button class="primary" type="submit">Send expression of interest →</button></div>
         </section>
@@ -189,6 +251,26 @@
   // Only public form code lives on GitHub; responses go to Formspree.
   const endpoint = 'https://formspree.io/f/xrpevqdv';
   const form = document.querySelector('#eoiForm');
+  const volunteerInterest = document.querySelector('#volunteerInterest');
+  const volunteerExtra = document.querySelector('#volunteerExtra');
+  const volunteerRole = document.querySelector('#volunteerRole');
+  const volunteerAvailability = document.querySelector('#volunteerAvailability');
+  const volunteerNotes = document.querySelector('#volunteerNotes');
+  function updateVolunteerFields() {
+    const interested = volunteerInterest.value.startsWith('Yes') || volunteerInterest.value.startsWith('Maybe');
+    volunteerExtra.hidden = !interested;
+    volunteerInterest.setAttribute('aria-expanded', String(interested));
+    if (!interested) {
+      volunteerRole.value = '';
+      volunteerAvailability.value = '';
+      volunteerNotes.value = '';
+      for (const input of [volunteerRole, volunteerAvailability, volunteerNotes]) input.disabled = true;
+    } else {
+      for (const input of [volunteerRole, volunteerAvailability, volunteerNotes]) input.disabled = false;
+    }
+  }
+  volunteerInterest.addEventListener('change', updateVolunteerFields);
+  updateVolunteerFields();
   const one = document.querySelector('#step1');
   const two = document.querySelector('#step2');
   const success = document.querySelector('#success');
@@ -271,7 +353,7 @@
       submitButton.disabled = false;
       submitButton.textContent = previousText;
     }
-    form.reset();updateAge();form.hidden = true;success.hidden = false;
+    form.reset();updateAge();updateVolunteerFields();form.hidden = true;success.hidden = false;
     document.querySelector('.progress-meta').hidden=true;
     document.querySelector('.progress-track').hidden=true;
     success.focus({preventScroll:true});window.scrollTo({top:0,behavior:'instant'});
