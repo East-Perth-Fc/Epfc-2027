@@ -163,7 +163,8 @@
             </div>
           </details>
           <label class="consent"><input id="consent" name="consent" type="checkbox" required><span>I confirm I'm the player's parent or guardian and agree to East Perth FC contacting me about the 2027 juniors expression of interest. <span class="required" aria-hidden="true">*</span></span></label>
-          <p class="submission-note">The club should provide its contact/privacy details before this form goes live. Submitting an EOI does not guarantee a team place.</p>
+          <p class="submission-note"><strong>Privacy:</strong> East Perth FC uses these details only to manage junior football expressions of interest and contact parents about the 2027 season. Submissions are received and stored using Formspree, not in this public GitHub website. Only authorised club account users should access the submissions. An expression of interest does not guarantee a team place.</p>
+          <p class="alert" id="submissionError" role="alert" hidden>We could not send your details. Please check your connection and try again.</p>
           <div class="controls"><button class="secondary" id="backButton" type="button">← Back</button><button class="primary" type="submit">Test submission →</button></div>
         </section>
       </form>
@@ -184,8 +185,14 @@
 <script>
 (() => {
   'use strict';
-  // PREVIEW MODE. This form intentionally does not transmit, save, or log data.
-  // Connect an approved private submission service before publishing publicly.
+  // Public site stays in preview until the club verifies delivery.
+  // Open ?epfc-test=1 with fictional details to test Formspree.
+  const connectionTest = new URLSearchParams(window.location.search).get('epfc-test') === '1';
+  const endpoint = 'https://formspree.io/f/xrpevqdv';
+  if (connectionTest) {
+    document.querySelector('.preview').textContent = 'CONNECTION TEST ONLY · ENTER MADE-UP DETAILS, NOT REAL CHILDREN';
+    document.querySelector('#eoiForm button[type="submit"]').textContent = 'Send test submission →';
+  }
   const form = document.querySelector('#eoiForm');
   const one = document.querySelector('#step1');
   const two = document.querySelector('#step2');
@@ -238,13 +245,40 @@
   const mobile = document.querySelector('#mobile');
   mobile.addEventListener('input',() => mobile.setCustomValidity(''));
   document.querySelectorAll('input[name="membership"]').forEach(x=>x.addEventListener('change',()=>document.querySelectorAll('input[name="membership"]').forEach(r=>r.setCustomValidity(''))));
-  form.addEventListener('submit',event => {
+  form.addEventListener('submit', async event => {
     event.preventDefault();
     if(!validate(one)){setStep(1);validate(one);return;}
     const digits = mobile.value.replace(/\D/g,'');
     if (digits.length < 9 || digits.length > 13) mobile.setCustomValidity('Please enter a valid contact number.');
     if(!validate(two)) return;
-    // SAFETY: Preview only. No fetch, e-mail, analytics, storage, or endpoint exists.
+    const error = document.querySelector('#submissionError');
+    error.hidden = true;
+    const submitButton = form.querySelector('button[type="submit"]');
+    if (connectionTest) {
+      submitButton.disabled = true;
+      const previousText = submitButton.textContent;
+      submitButton.textContent = 'Sending test…';
+      try {
+        const payload = new FormData(form);
+        payload.append('suggestedAgeGroup', ageValue.textContent);
+        payload.append('_subject', 'EPFC Juniors 2027 – TEST EOI');
+        const response = await fetch(endpoint, {
+          method: 'POST', body: payload,
+          headers: { 'Accept': 'application/json' }
+        });
+        if (!response.ok) throw new Error('The form service rejected the submission.');
+        success.querySelector('h2').textContent = 'Test submission sent';
+        success.querySelector('p').textContent = 'Formspree accepted the test. Check its Submissions tab and notification email before opening the form to parents.';
+      } catch (_) {
+        error.hidden = false;
+        error.textContent = 'The test was not confirmed by Formspree. Please try again; no success has been recorded.';
+        error.focus?.();
+        return;
+      } finally {
+        submitButton.disabled = false;
+        submitButton.textContent = previousText;
+      }
+    }
     form.reset();updateAge();form.hidden = true;success.hidden = false;
     document.querySelector('.progress-meta').hidden=true;
     document.querySelector('.progress-track').hidden=true;
